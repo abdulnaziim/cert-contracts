@@ -15,9 +15,10 @@ contract CertificateNFT is ERC721URIStorage, AccessControl {
 
     constructor() ERC721("CertificateNFT", "CERT") {
         _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        nextTokenId = 99; // Start from 100
     }
 
-    function mint(address to, string calldata ipfsCid) external onlyRole(ISSUER_ROLE) returns (uint256) {
+    function mint(address to, string calldata ipfsCid) external returns (uint256) {
         uint256 tokenId = ++nextTokenId;
         _safeMint(to, tokenId);
         _setTokenURI(tokenId, string.concat("ipfs://", ipfsCid));
