@@ -26,8 +26,13 @@ contract CertificateNFT is ERC721URIStorage, AccessControl {
         return tokenId;
     }
 
-    function revoke(uint256 tokenId) external onlyRole(DEFAULT_ADMIN_ROLE) {
+    function revoke(uint256 tokenId) external {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) || hasRole(ISSUER_ROLE, msg.sender),
+            "Not authorized"
+        );
         require(_ownerOf(tokenId) != address(0), "Invalid token");
+        require(!revoked[tokenId], "Already revoked");
         revoked[tokenId] = true;
         emit CertificateRevoked(tokenId);
     }
